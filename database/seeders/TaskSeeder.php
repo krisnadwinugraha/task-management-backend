@@ -12,7 +12,7 @@ class TaskSeeder extends Seeder
     public function run()
     {
         // Create 50 tasks
-        Task::factory(50)->create()->each(function ($task) {
+        Task::factory(15)->create()->each(function ($task) {
             // Add 1-5 comments to each task
             TaskComment::factory(rand(1, 5))->create([
                 'task_id' => $task->id

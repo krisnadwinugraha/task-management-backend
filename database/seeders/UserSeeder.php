@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
         $manager->assignRole('manager');
 
         // Create regular users
-        User::factory(8)->create()->each(function ($user) {
+        User::factory(2)->create()->each(function ($user) {
             $user->assignRole('user');
         });
     }

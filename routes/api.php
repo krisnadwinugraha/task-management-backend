@@ -20,20 +20,16 @@ Route::post('/login', [AuthController::class, 'login']);
 // Protected routes
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    
+
     // Task routes
     Route::apiResource('tasks', TaskController::class);
-    
+
     // Task comments routes
     Route::get('tasks/{task}/comments', [TaskCommentController::class, 'index']);
     Route::post('tasks/{task}/comments', [TaskCommentController::class, 'store']);
     Route::delete('tasks/{task}/comments/{comment}', [TaskCommentController::class, 'destroy']);
-    
+
     // Task activities routes
     Route::get('tasks/{task}/activities', [ActivityController::class, 'taskActivities']);
-
-    // User routes (admin only)
-    Route::middleware(['role:admin'])->group(function () {
-        Route::apiResource('users', UserController::class);
-    });
+    Route::apiResource('users', UserController::class);
 });

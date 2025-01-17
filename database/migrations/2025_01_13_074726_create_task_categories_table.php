@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('task_id')->constrained();
             $table->foreignId('category_id')->constrained();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

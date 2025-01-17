@@ -6,39 +6,49 @@ use App\Http\Controllers\Controller;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Http\Resources\TaskResource;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class TaskController extends Controller
 {
+    use AuthorizesRequests;
     // In TaskController@index
     public function index(Request $request)
     {
         $query = Task::query();
-        
-        // Search
-        if ($request->search) {
-            $query->where(function($q) use ($request) {
+
+        // Search by title or description
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
                 $q->where('title', 'like', "%{$request->search}%")
-                ->orWhere('description', 'like', "%{$request->search}%");
+                  ->orWhere('description', 'like', "%{$request->search}%");
             });
         }
-        
-        // Filters
-        if ($request->status) {
+
+        // Apply filters
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-        
-        if ($request->priority) {
+
+        if ($request->filled('priority')) {
             $query->where('priority', $request->priority);
         }
-        
-        if ($request->due_date) {
+
+        if ($request->filled('due_date')) {
             $query->whereDate('due_date', $request->due_date);
         }
 
-        // Date range filter
-        if ($request->start_date && $request->end_date) {
+        // Apply date range filter
+        if ($request->filled(['start_date', 'end_date'])) {
             $query->whereBetween('due_date', [$request->start_date, $request->end_date]);
         }
+
+        // Eager load relationships if needed
+        $query->with(['assignedUser', 'creator', 'comments']);
+
+        // Paginate results
+        $tasks = $query->paginate(10);
+
+        return TaskResource::collection($tasks);
     }
 
     public function store(Request $request)
@@ -63,7 +73,7 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         $this->authorize('view', $task);
-        
+
         return new TaskResource($task->load(['assignedUser', 'creator', 'comments']));
     }
 
@@ -110,7 +120,7 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         $this->authorize('delete', $task);
-        
+
         $task->delete();
 
         return response()->json(['message' => 'Task deleted successfully']);

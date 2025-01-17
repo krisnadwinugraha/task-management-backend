@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class TaskAttachment extends Model
 {
     use HasFactory;
+
+    protected $guarded = ['id'];
 }
