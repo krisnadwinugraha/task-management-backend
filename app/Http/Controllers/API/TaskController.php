@@ -87,7 +87,7 @@ class TaskController extends Controller
             'status' => 'sometimes|required|in:pending,in_progress,completed,on_hold',
             'priority' => 'sometimes|required|in:low,medium,high,urgent',
             'assigned_to' => 'nullable|exists:users,id',
-            'due_date' => 'nullable|date',
+            'due_date' => 'nullable',
         ]);
 
         // Add custom activity log description for specific changes
