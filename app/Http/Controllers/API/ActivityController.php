@@ -6,15 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Spatie\Activitylog\Models\Activity;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 
 class ActivityController extends Controller
 {
-    public function taskActivities(Task $task)
-    {
-        $this->authorize('view', $task);
+    use AuthorizesRequests;
 
+    public function taskActivities()
+    {
         $activities = Activity::where('subject_type', Task::class)
-            ->where('subject_id', $task->id)
             ->with('causer')
             ->latest()
             ->paginate(15);

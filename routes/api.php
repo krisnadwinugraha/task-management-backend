@@ -30,6 +30,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('tasks/{task}/comments/{comment}', [TaskCommentController::class, 'destroy']);
 
     // Task activities routes
-    Route::get('tasks/{task}/activities', [ActivityController::class, 'taskActivities']);
+    Route::get('activities', [ActivityController::class, 'taskActivities']);
     Route::apiResource('users', UserController::class);
 });
