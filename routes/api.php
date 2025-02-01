@@ -7,6 +7,8 @@ use App\Http\Controllers\API\TaskController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\TaskCommentController;
 use App\Http\Controllers\API\ActivityController;
+use App\Http\Controllers\API\RoleController;
+use App\Http\Controllers\API\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +34,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Task activities routes
     Route::get('activities', [ActivityController::class, 'taskActivities']);
     Route::apiResource('users', UserController::class);
+
+    // Role routes
+    Route::apiResource('roles', RoleController::class);
+
+    // Permission routes
+    Route::get('permissions', [PermissionController::class, 'index']);
 });
