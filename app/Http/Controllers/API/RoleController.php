@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use App\Http\Resources\RoleResource;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
@@ -26,10 +27,12 @@ class RoleController extends Controller
             'permissions.*' => 'exists:permissions,name',
         ]);
 
-        $role = Role::create(['name' => $validated['name']]);
+        $role = Role::create(['name' => $validated['name'], 'guard_name' => 'sanctum']);
 
         if (!empty($validated['permissions'])) {
-            $role->syncPermissions($validated['permissions']);
+            $permissions = Permission::whereIn('name', $validated['permissions'])
+                                  ->get();
+            $role->syncPermissions($permissions);
         }
 
         return new RoleResource($role);
@@ -51,7 +54,10 @@ class RoleController extends Controller
         $role->update(['name' => $validated['name']]);
 
         if (isset($validated['permissions'])) {
-            $role->syncPermissions($validated['permissions']);
+            // Get permissions with web guard
+            $permissions = Permission::whereIn('name', $validated['permissions'])
+                                  ->get();
+            $role->syncPermissions($permissions);
         }
 
         return new RoleResource($role);
