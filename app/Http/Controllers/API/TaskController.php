@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\TaskResource;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
